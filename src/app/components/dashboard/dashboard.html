@@ -1,0 +1,89 @@
+<div
+    class="sticky top-0 left-0 right-0 z-40 flex-shrink-0 w-full bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between shadow-sm">
+
+    <div class="flex items-center gap-2 pl-12 md:pl-0">
+        <span class="text-xl font-black text-gray-800 tracking-tight flex items-center gap-1.5">
+            <span class="text-blue-600">⚡</span>DocQA
+        </span>
+    </div>
+
+    @if (activeWorkspace) {
+    <span
+        class="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium border border-blue-100 flex items-center gap-1 shadow-sm">
+        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+        <span class="truncate max-w-[100px] md:max-w-none">Active: {{ activeWorkspace.name }}</span>
+    </span>
+    }
+
+</div>
+
+<div class="flex-1 flex flex-col overflow-hidden w-full bg-gray-50/50">
+
+    @if (!activeWorkspace) {
+    <div class="flex-1 flex flex-col justify-between items-center p-4 md:p-8 overflow-y-auto">
+
+        <div class="w-full max-w-xl flex flex-col items-center gap-3 md:gap-5 mt-2 md:mt-4">
+            <div class="text-center">
+                <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight mb-2">Welcome to DocQA</h1>
+                <p class="text-[11px] md:text-sm text-gray-600 leading-relaxed font-normal px-2">
+                    DocQA is an enterprise-grade document intelligence engine. Unlike standard single-file parsers, our
+                    system vectorizes and indexes up to 3 documents simultaneously. This enables deep cross-referencing,
+                    semantic search, and highly accurate, context-aware answers. Upload your files to initialize your
+                    secure knowledge workspace.
+                </p>
+            </div>
+
+            <div class="w-full bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-4">
+
+                <app-file-uploader #uploaderRef (onUploadStatusChange)="handleStatusChange($event)"></app-file-uploader>
+
+                <div class="w-full flex justify-center">
+                    <button (click)="openWorkspaceModal()" [disabled]="!isChatUnlocked"
+                        [class.bg-blue-600]="isChatUnlocked" [class.hover:bg-blue-700]="isChatUnlocked"
+                        [class.bg-gray-300]="!isChatUnlocked" [class.cursor-not-allowed]="!isChatUnlocked"
+                        class="w-full md:w-auto text-white font-semibold py-2.5 px-8 rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                        Upload & Proceed
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full text-center pb-2 pt-4 border-t border-gray-200/40 max-w-md">
+            <p class="text-[11px] text-gray-400 font-medium tracking-wider uppercase">
+                Developed by <span class="text-gray-700 font-bold">Abhishek Raj Ravi</span>
+            </p>
+        </div>
+
+    </div>
+    } @else {
+    <app-chat-window class="flex-1 flex flex-col h-full overflow-hidden"></app-chat-window>
+    }
+
+</div>
+
+@if (isModalOpen) {
+<div class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl w-full max-w-sm p-5 shadow-2xl">
+        <h3 class="text-lg font-bold text-gray-800 mb-1">Name your Workspace</h3>
+        <p class="text-xs text-gray-500 mb-4">Give this collection a name to save it.</p>
+
+        <input #wsName type="text" placeholder="e.g. Project Specs"
+            class="w-full border border-gray-300 rounded-lg p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 mb-4">
+
+        <div class="flex justify-end gap-2 text-sm">
+            <button (click)="closeModal()"
+                class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium">Cancel</button>
+
+            <button (click)="createWorkspaceAndUpload(wsName.value)" [disabled]="isUploading"
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium shadow-sm disabled:bg-blue-400 disabled:cursor-not-allowed w-[160px]">
+                {{ uploadingText }}
+            </button>
+        </div>
+    </div>
+</div>
+}

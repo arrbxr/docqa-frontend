@@ -1,0 +1,65 @@
+<div class="flex flex-col h-full w-full bg-gray-50/50 overflow-hidden relative">
+
+    <div #chatContainer class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 scroll-smooth">
+        @for (msg of messages; track $index) {
+        <div class="flex w-full" [class.justify-end]="msg.isUser" [class.justify-start]="!msg.isUser">
+            <div class="flex gap-2.5 max-w-[95%] md:max-w-[75%]" [class.flex-row-reverse]="msg.isUser">
+
+                <div class="flex-shrink-0 h-8 w-8 mt-1 rounded-full flex items-center justify-center text-sm shadow-sm"
+                    [class.bg-blue-100]="msg.isUser" [class.bg-white]="!msg.isUser" [class.border]="!msg.isUser"
+                    [class.border-gray-200]="!msg.isUser">
+                    {{ msg.isUser ? '👤' : '🤖' }}
+                </div>
+
+                <div class="flex flex-col w-full" [class.items-end]="msg.isUser" [class.items-start]="!msg.isUser">
+                    <div [class.bg-blue-600]="msg.isUser" [class.text-white]="msg.isUser"
+                        [class.rounded-tr-none]="msg.isUser" [class.bg-white]="!msg.isUser"
+                        [class.text-gray-800]="!msg.isUser" [class.rounded-tl-none]="!msg.isUser"
+                        [class.shadow-sm]="!msg.isUser" [class.border]="!msg.isUser"
+                        [class.border-gray-200/60]="!msg.isUser"
+                        class="rounded-2xl px-4 py-2.5 text-sm leading-relaxed break-words">
+                        
+                        @if (msg.isThinking) {
+                            <div class="flex items-center gap-2 py-1">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-150"></div>
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-300"></div>
+                                <span class="text-xs font-medium italic">DocQA AI is thinking...</span>
+                            </div>
+                        } @else {
+                            <div 
+                                class="prose prose-sm md:prose-base max-w-none whitespace-pre-wrap"
+                                [innerHTML]="formatMarkdown(msg.text)"
+                                style="display: block;">
+                            </div>
+                        }
+                    </div>
+                    <span class="text-[10px] text-gray-400 mt-1.5 px-1 font-medium">{{ msg.time }}</span>
+                </div>
+
+            </div>
+        </div>
+        }
+    </div>
+
+    <div
+        class="flex-shrink-0 w-full bg-white border-t border-gray-200 p-3 md:p-4 z-10 shadow-[0_-4px_10px_-4px_rgba(0,0,0,0.05)]">
+        <div class="max-w-4xl mx-auto flex items-center gap-2">
+            <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()"
+                placeholder="Ask a question about your documents..."
+                class="flex-1 border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all shadow-inner">
+
+            <button (click)="sendMessage()" [disabled]="!newMessage.trim()" [class.bg-blue-600]="newMessage.trim()"
+                [class.text-white]="newMessage.trim()" [class.bg-gray-100]="!newMessage.trim()"
+                [class.text-gray-400]="!newMessage.trim()"
+                class="p-3 rounded-xl transition-all shadow-sm flex items-center justify-center active:scale-95 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform rotate-90" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path
+                        d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+</div>
