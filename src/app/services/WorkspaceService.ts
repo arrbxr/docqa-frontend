@@ -2,6 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, forkJoin, tap } from 'rxjs';
 
+import { environment } from '../../environments/environment.prod';
+
 // 🔥 Chat message ka structure
 export interface ChatMessage {
   text: string;
@@ -25,7 +27,7 @@ export class WorkspaceService {
   private http = inject(HttpClient);
   
   // 🔥 Tumhara API Gateway URL
-  private API_GATEWAY_URL = 'http://localhost:8080/api/v1'; 
+  private API_GATEWAY_URL = environment.apiUrl;  
 
   // 1. Current Active Workspace
   private currentWorkspace = new BehaviorSubject<Workspace | null>(null);
